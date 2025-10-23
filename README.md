@@ -31,8 +31,7 @@ This application provides a custom web form hosted at `curations.dev/la` that en
 
 The form uses a vibrant color scheme inspired by la.curations.cc:
 - Primary Color: Coral Red (#FF6B6B)
-- Secondary Color: Turquoise (#4ECDC4)
-- Accent Color: Sunny Yellow (#FFE66D)
+- Background Gradient: Cyan to Magenta (#40C9FF → #E81CFF)
 
 ## Prerequisites
 
