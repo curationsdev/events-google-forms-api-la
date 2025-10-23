@@ -92,11 +92,11 @@ module.exports = {
   ],
   
   styling: {
-    primaryColor: '#FF6B6B',    // Coral red - typical LA vibrant color
-    secondaryColor: '#4ECDC4',  // Turquoise - ocean/beach inspired
-    accentColor: '#FFE66D',     // Sunny yellow
-    backgroundColor: '#F7F7F7',
-    textColor: '#2C3E50',
-    borderColor: '#E0E0E0'
+    primaryColor: '#7B3FF2',    // Purple - brutalist design
+    secondaryColor: '#00D084',  // Green - brutalist design
+    accentColor: '#1A1A1A',     // Dark accent
+    backgroundColor: '#FFFFFF',
+    textColor: '#000000',
+    borderColor: '#000000'
   }
 };
