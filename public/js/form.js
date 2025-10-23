@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Handle file uploads separately
-            const mediaFiles = document.getElementById('media').files;
+            const mediaInput = document.getElementById('media');
+            const mediaFiles = mediaInput ? mediaInput.files : [];
             if (mediaFiles.length > 0) {
                 data.mediaCount = mediaFiles.length;
                 data.mediaFiles = Array.from(mediaFiles).map(f => f.name);
