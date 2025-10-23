@@ -32,11 +32,11 @@ A complete, production-ready web application for CurationsLA to collect event an
 - Validation adjusts based on selection
 - Smooth animations for field transitions
 
-#### 3. Design (LA-Inspired Color Scheme) ✅
-- **Primary**: Coral Red (#FF6B6B) - Vibrant LA energy
-- **Secondary**: Turquoise (#4ECDC4) - Ocean/beach inspired
-- **Accent**: Sunny Yellow (#FFE66D) - California sunshine
-- Gradient header combining coral and turquoise
+#### 3. Design (Brutalist Gradient Color Scheme) ✅
+- **Primary**: Cyan (#40C9FF) - Bold, energetic
+- **Secondary**: Magenta (#E81CFF) - Vibrant, modern
+- **Accent**: Brutalist gradient from cyan to magenta (#40C9FF → #E81CFF)
+- Gradient header using cyan-to-magenta brutalist design
 - Clean, modern, responsive layout
 - Mobile-friendly design
 
