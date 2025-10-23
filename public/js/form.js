@@ -48,32 +48,13 @@ document.addEventListener('DOMContentLoaded', function() {
         showLoading();
         
         try {
-            // Prepare form data
+            // Prepare form data (including files)
             const formData = new FormData(form);
-            const data = {};
             
-            // Convert FormData to JSON (excluding files for now)
-            for (const [key, value] of formData.entries()) {
-                if (key !== 'media') {
-                    data[key] = value;
-                }
-            }
-            
-            // Handle file uploads separately
-            const mediaInput = document.getElementById('media');
-            const mediaFiles = mediaInput ? mediaInput.files : [];
-            if (mediaFiles.length > 0) {
-                data.mediaCount = mediaFiles.length;
-                data.mediaFiles = Array.from(mediaFiles).map(f => f.name);
-            }
-            
-            // Submit to server
+            // Submit to server using multipart/form-data
             const response = await fetch('/la/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
+                body: formData
             });
             
             const result = await response.json();
