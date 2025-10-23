@@ -59,7 +59,7 @@ module.exports = {
       type: 'url',
       required: false,
       placeholder: 'https://curations.org',
-      description: 'Related URL or website link'
+      description: 'Event, Content + PR website'
     },
     {
       id: 'socialMedia',
