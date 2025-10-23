@@ -9,7 +9,7 @@ module.exports = {
       type: 'text',
       required: true,
       placeholder: 'Enter your name',
-      description: 'Your full name'
+      description: 'First name only is ok!'
     },
     {
       id: 'type',
@@ -50,15 +50,15 @@ module.exports = {
       label: 'Media',
       type: 'file',
       required: false,
-      accept: 'image/*,video/*',
-      description: 'Upload media files (images or videos)'
+      accept: 'image/*,video/*,pdf/*',
+      description: 'Upload media files (images, videos or pdfs)'
     },
     {
       id: 'url',
       label: 'URL',
       type: 'url',
       required: false,
-      placeholder: 'https://example.com',
+      placeholder: 'https://curations.org',
       description: 'Related URL or website link'
     },
     {
@@ -66,7 +66,7 @@ module.exports = {
       label: 'Social Media',
       type: 'url',
       required: false,
-      placeholder: 'https://instagram.com/yourprofile',
+      placeholder: 'https://instagram.com/CurationsLA',
       description: 'Social media profile or post link'
     },
     {
@@ -80,14 +80,14 @@ module.exports = {
   
   backlinks: [
     {
-      name: 'Curations LA',
-      url: 'https://la.curations.cc',
-      description: 'CurationsLA Portal'
-    },
-    {
       name: 'CURATIONS',
       url: 'https://curations.org',
-      description: 'Main Curations Site'
+      description: 'CURATIONS Creative'
+    },
+    {
+      name: 'curations.dev',
+      url: 'https://curations.dev',
+      description: 'curations.dev'
     }
   ],
   
