@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CurationsLA - Event & Content Submission</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="form-header">
+            <h1>CurationsLA</h1>
+            <h2>Event & Content Submission</h2>
+            <p class="subtitle">Submit your events and content to be featured on CurationsLA</p>
+        </header>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Loading form...</p>
+        </div>
+
+        <div id="errorMessage" class="message error hidden"></div>
+        <div id="successMessage" class="message success hidden"></div>
+
+        <form id="submissionForm" class="form-content">
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name" class="required">Name</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter your name">
+                <small>Your full name</small>
+            </div>
+
+            <!-- Type Field -->
+            <div class="form-group">
+                <label for="type" class="required">Type</label>
+                <select id="type" name="type" required>
+                    <option value="">Select type...</option>
+                    <option value="Content">Content</option>
+                    <option value="Event">Event</option>
+                </select>
+                <small>Select whether this is content or an event</small>
+            </div>
+
+            <!-- Event Date Field (conditional) -->
+            <div class="form-group conditional" id="eventDateGroup" style="display: none;">
+                <label for="eventDate" class="required">Event Date</label>
+                <input type="date" id="eventDate" name="eventDate">
+                <small>Date of the event (Event only)</small>
+            </div>
+
+            <!-- Venue Field (conditional) -->
+            <div class="form-group conditional" id="venueGroup" style="display: none;">
+                <label for="venue" class="required">Venue</label>
+                <input type="text" id="venue" name="venue" 
+                       placeholder="Enter venue name">
+                <small>Event venue (Event only)</small>
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label for="description" class="required">Description</label>
+                <textarea id="description" name="description" rows="6" required
+                          placeholder="Enter detailed description"></textarea>
+                <small>Long form description of your event or content</small>
+            </div>
+
+            <!-- Media Upload Field -->
+            <div class="form-group">
+                <label for="media">Media</label>
+                <input type="file" id="media" name="media" 
+                       accept="image/*,video/*" multiple>
+                <small>Upload media files (images or videos)</small>
+            </div>
+
+            <!-- URL Field -->
+            <div class="form-group">
+                <label for="url">URL</label>
+                <input type="url" id="url" name="url" 
+                       placeholder="https://example.com">
+                <small>Related URL or website link</small>
+            </div>
+
+            <!-- Social Media Field -->
+            <div class="form-group">
+                <label for="socialMedia">Social Media</label>
+                <input type="url" id="socialMedia" name="socialMedia" 
+                       placeholder="https://instagram.com/yourprofile">
+                <small>Social media profile or post link</small>
+            </div>
+
+            <!-- Date Field -->
+            <div class="form-group">
+                <label for="date" class="required">Date</label>
+                <input type="date" id="date" name="date" required>
+                <small>Submission date</small>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Submit</button>
+                <button type="reset" class="btn-secondary">Clear Form</button>
+            </div>
+        </form>
+
+        <!-- Backlinks Section -->
+        <footer class="backlinks">
+            <div class="backlinks-content">
+                <p class="backlinks-title">Explore More:</p>
+                <div class="backlinks-list">
+                    <a href="https://la.curations.cc" target="_blank" rel="noopener noreferrer" 
+                       class="backlink-item">
+                        <strong>Curations LA</strong>
+                        <span>la.curations.cc</span>
+                    </a>
+                    <a href="https://curations.org" target="_blank" rel="noopener noreferrer" 
+                       class="backlink-item">
+                        <strong>CURATIONS</strong>
+                        <span>curations.org</span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/js/form.js"></script>
+</body>
+</html>
