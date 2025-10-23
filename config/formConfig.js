@@ -50,7 +50,7 @@ module.exports = {
       label: 'Media',
       type: 'file',
       required: false,
-      accept: 'image/*,video/*,pdf/*',
+      accept: 'image/*,video/*',
       description: 'Upload media files (images, videos or pdfs)'
     },
     {
