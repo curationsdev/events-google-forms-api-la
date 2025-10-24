@@ -37,7 +37,7 @@ jobs:
       - name: Commit updated responses
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            git add -A
+            git add responses/ .github/scripts/
             git commit -m "📝 Auto-update: New form responses $(date +'%Y-%m-%d %H:%M UTC')" || exit 0
             git push
             echo "✅ Responses updated and committed"
