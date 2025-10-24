@@ -2,9 +2,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('submissionForm');
     const typeSelect = document.getElementById('type');
-    const eventDateGroup = document.getElementById('eventDateGroup');
+    const eventDatesGroup = document.getElementById('eventDatesGroup');
     const venueGroup = document.getElementById('venueGroup');
-    const eventDateInput = document.getElementById('eventDate');
+    const eventDatesInput = document.getElementById('eventDates');
     const venueInput = document.getElementById('venue');
     const dateInput = document.getElementById('date');
     
@@ -20,16 +20,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const isEvent = this.value === 'Event';
         
         if (isEvent) {
-            eventDateGroup.style.display = 'block';
+            eventDatesGroup.style.display = 'block';
             venueGroup.style.display = 'block';
-            eventDateInput.required = true;
-            venueInput.required = true;
+            eventDatesInput.required = true;
+            // Venue is optional even for events
         } else {
-            eventDateGroup.style.display = 'none';
+            eventDatesGroup.style.display = 'none';
             venueGroup.style.display = 'none';
-            eventDateInput.required = false;
-            venueInput.required = false;
-            eventDateInput.value = '';
+            eventDatesInput.required = false;
+            eventDatesInput.value = '';
             venueInput.value = '';
         }
     });
@@ -119,16 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (type === 'Event') {
-            const eventDate = document.getElementById('eventDate').value;
-            const venue = document.getElementById('venue').value.trim();
+            const eventDates = document.getElementById('eventDates').value.trim();
             
-            if (!eventDate) {
-                showMessage('error', 'Please enter an event date.');
-                return false;
-            }
-            
-            if (!venue) {
-                showMessage('error', 'Please enter a venue for the event.');
+            if (!eventDates) {
+                showMessage('error', 'Please enter event date(s) for event submissions.');
                 return false;
             }
         }
@@ -152,8 +145,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
+        // Validate social media URLs - reject TikTok
         if (socialMedia && !isValidUrl(socialMedia)) {
             showMessage('error', 'Please enter a valid social media URL.');
+            return false;
+        }
+        
+        if (socialMedia && socialMedia.toLowerCase().includes('tiktok')) {
+            showMessage('error', 'We do not accept TikTok links. Please use Instagram, X/Twitter, or YouTube instead.');
             return false;
         }
         
@@ -208,10 +207,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Convert FormData to object
         for (let [key, value] of formData.entries()) {
             // Handle file inputs differently for Google Forms
-            if (key === 'uploadMedia') {
+            if (key === 'submitMedia') {
                 // Note: Google Forms file uploads require special handling
                 // Files will need to be uploaded separately or handled via Google Drive integration
-                console.log('File upload detected:', value.name);
+                console.log('Media file upload detected:', value.name);
                 // For now, we'll note the file but not include in submission
                 // In production, implement Google Drive API integration
                 continue;
