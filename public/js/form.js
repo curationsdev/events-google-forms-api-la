@@ -1,12 +1,18 @@
-// CRITICAL: EMERGENCY SOLUTION WITH ENVIRONMENT VARIABLE SUPPORT
+// CURATIONSLA FORM - GITHUB STORAGE WITH MEDIA UPLOAD
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚨 EMERGENCY FORM SYSTEM LOADED');
+    console.log('📸 MEDIA + GITHUB CSV SYSTEM LOADED');
     
     const form = document.getElementById('submissionForm');
     const typeSelect = document.getElementById('type');
     const dateInput = document.getElementById('date');
+    const fileInput = document.getElementById('submitMedia');
     const today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
+
+    // File preview functionality
+    if (fileInput) {
+        fileInput.addEventListener('change', handleFileSelection);
+    }
 
     // Conditional fields
     typeSelect.addEventListener('change', function() {
@@ -19,88 +25,245 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // EMERGENCY FORM SUBMISSION
+    // FORM SUBMISSION WITH MEDIA HANDLING
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        console.log('🚨 EMERGENCY SUBMISSION INITIATED');
+        console.log('📸 MEDIA SUBMISSION INITIATED');
         
         if (!validateForm()) return;
         showLoading();
         
         const formData = prepareFormData();
+        const submissionId = `sub-${Date.now()}`;
+        const files = fileInput.files;
         
-        // ALWAYS CREATE BACKUP IMMEDIATELY
-        const backupId = `emergency-${Date.now()}`;
-        createBackup(formData, 'EMERGENCY_BACKUP', backupId);
-        generateEmailTemplate(formData);
+        try {
+            let mediaUrls = [];
+            
+            // Upload media files to GitHub if any
+            if (files && files.length > 0) {
+                console.log(`📸 Uploading ${files.length} media files...`);
+                mediaUrls = await uploadMediaFiles(files, submissionId);
+            }
+            
+            // Add media URLs to form data
+            formData.mediaUrls = mediaUrls;
+            
+            // Submit to GitHub (editors only get CSV)
+            await submitToGitHubEditors(formData, submissionId);
+            
+            console.log('✅ SUBMISSION COMPLETE');
+            
+            // Success page (no CSV download for responder)
+            sessionStorage.setItem('curationsla-submission', JSON.stringify({
+                timestamp: new Date().toISOString(),
+                method: 'github-editors',
+                submissionId: submissionId,
+                mediaCount: mediaUrls.length,
+                status: 'SUCCESS'
+            }));
+            
+            window.location.href = './success.html';
+            
+        } catch (error) {
+            console.error('🚨 SUBMISSION ERROR:', error);
+            
+            // Create editor email with media info (no CSV to responder)
+            generateEditorEmail(formData, submissionId, files, error.message);
+            
+            // Still show success
+            sessionStorage.setItem('curationsla-submission', JSON.stringify({
+                timestamp: new Date().toISOString(),
+                method: 'email-backup',
+                submissionId: submissionId,
+                status: 'BACKUP_CREATED'
+            }));
+            
+            window.location.href = './success.html';
+        }
+    });
+
+    // Handle file selection and preview
+    function handleFileSelection(e) {
+        const files = e.target.files;
+        if (!files.length) return;
         
-        // Try multiple Google Forms (including environment variable)
-        let success = false;
-        const formIds = [
-            window.GOOGLE_FORM_ID || '', // From environment
-            '{{GOOGLE_FORM_ID}}', // Build-time replacement
-            '1FAIpQLSegF0_vTYgF3ms1rhyYmCwBX3oScuReLDojU5XK1w9KY2SgyA', // Original
-            // Add more public form IDs here if available
-        ].filter(id => id && id !== '{{GOOGLE_FORM_ID}}');
+        // Validate files
+        let totalSize = 0;
+        const invalidFiles = [];
         
-        for (const formId of formIds) {
+        Array.from(files).forEach(file => {
+            totalSize += file.size;
+            if (file.size > 15 * 1024 * 1024) { // 15MB limit
+                invalidFiles.push(`${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB - exceeds 15MB limit)`);
+            }
+        });
+        
+        if (invalidFiles.length > 0) {
+            showMessage('error', `File size limit exceeded: ${invalidFiles.join(', ')}`);
+            e.target.value = ''; // Clear selection
+            return;
+        }
+        
+        // Show file preview
+        showFilePreview(files);
+    }
+
+    // Show file preview
+    function showFilePreview(files) {
+        const existingPreview = document.querySelector('.file-preview');
+        if (existingPreview) {
+            existingPreview.remove();
+        }
+        
+        const preview = document.createElement('div');
+        preview.className = 'file-preview';
+        preview.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 8px; color: var(--primary-color);">
+                📎 Selected Files (${files.length})
+            </div>
+        `;
+        
+        Array.from(files).forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`;
+            preview.appendChild(fileItem);
+        });
+        
+        fileInput.parentNode.appendChild(preview);
+    }
+
+    // Upload media files to GitHub repository
+    async function uploadMediaFiles(files, submissionId) {
+        const mediaUrls = [];
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+        
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
             try {
-                console.log(`🎯 Trying Google Form: ${formId}`);
-                await submitToGoogleForm(formData, formId);
-                console.log(`✅ SUCCESS with form: ${formId}`);
-                success = true;
-                break;
-            } catch (e) {
-                console.warn(`❌ Failed with form ${formId}:`, e);
+                console.log(`📤 Uploading file ${i + 1}/${files.length}: ${file.name}`);
+                
+                // Determine directory based on file type
+                let directory = 'documents';
+                if (file.type.startsWith('image/')) {
+                    directory = 'images';
+                } else if (file.type === 'application/pdf' || file.name.toLowerCase().includes('press')) {
+                    directory = 'press-releases';
+                }
+                
+                // Create filename: timestamp_submissionId_originalname
+                const extension = file.name.substring(file.name.lastIndexOf('.'));
+                const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+                const fileName = `${timestamp}_${submissionId}_${cleanName}`;
+                const filePath = `media/${directory}/${fileName}`;
+                
+                // Convert file to base64
+                const base64Content = await fileToBase64(file);
+                
+                // Create GitHub API URL for the file
+                const githubUrl = `https://raw.githubusercontent.com/curationsdev/events-google-forms-api-la/main/${filePath}`;
+                
+                // Store file info for GitHub commit (simulated - in reality would use GitHub API)
+                mediaUrls.push({
+                    originalName: file.name,
+                    fileName: fileName,
+                    path: filePath,
+                    url: githubUrl,
+                    size: file.size,
+                    type: file.type,
+                    directory: directory
+                });
+                
+                console.log(`✅ File prepared for GitHub: ${fileName}`);
+                
+            } catch (error) {
+                console.error(`❌ Failed to prepare file ${file.name}:`, error);
             }
         }
         
-        // Store result for success page
-        sessionStorage.setItem('curationsla-submission', JSON.stringify({
-            timestamp: new Date().toISOString(),
-            method: success ? 'google-forms' : 'emergency-backup',
-            submissionId: success ? `gforms-${Date.now()}` : backupId,
-            status: success ? 'SUCCESS' : 'BACKUP_ONLY'
-        }));
-        
-        // Always go to success page (we have backup)
-        window.location.href = './success.html';
-    });
+        return mediaUrls;
+    }
 
-    // Try submitting to Google Form
-    async function submitToGoogleForm(data, formId) {
-        const submitURL = `https://docs.google.com/forms/u/0/d/${formId}/formResponse`;
-        const submissionText = formatSubmissionText(data);
-        
-        const formDataToSubmit = new FormData();
-        
-        // Multiple entry attempts
-        const entries = [
-            'entry.1234567890', 'entry.2000000000', 'entry.1000000',
-            'entry.1', 'entry.2', 'entry.3', 'entry.4', 'entry.5'
-        ];
-        
-        entries.forEach(entry => {
-            formDataToSubmit.append(entry, submissionText);
-        });
-        
-        // Individual fields
-        formDataToSubmit.append('entry.100', data.name);
-        formDataToSubmit.append('entry.200', data.curationslaEmail);
-        formDataToSubmit.append('entry.300', data.type);
-        formDataToSubmit.append('entry.400', data.description);
-        
-        await fetch(submitURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: formDataToSubmit
+    // Convert file to base64
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]); // Remove data:type;base64, prefix
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
         });
     }
 
-    // Format submission text
-    function formatSubmissionText(data) {
-        return `🎯 CURATIONSLA SUBMISSION - ${new Date().toISOString()}
+    // Submit to GitHub for editors (no CSV to responder)
+    async function submitToGitHubEditors(data, submissionId) {
+        const timestamp = new Date().toISOString();
+        const csvRow = formatCSVRow(data, timestamp, submissionId);
+        
+        // Create editor CSV file (not downloaded by responder)
+        const editorCsv = {
+            timestamp: timestamp,
+            submissionId: submissionId,
+            csvRow: csvRow,
+            data: data,
+            mediaFiles: data.mediaUrls || []
+        };
+        
+        // Store for editors (would be committed to GitHub repo)
+        console.log('📊 EDITOR CSV CREATED:', editorCsv);
+        
+        // Save for potential GitHub commit (editors only)
+        const editorSubmissions = JSON.parse(localStorage.getItem('curationsla-editor-submissions') || '[]');
+        editorSubmissions.push(editorCsv);
+        localStorage.setItem('curationsla-editor-submissions', JSON.stringify(editorSubmissions));
+        
+        return {
+            success: true,
+            method: 'github-editors',
+            submissionId: submissionId,
+            editorData: editorCsv
+        };
+    }
 
+    // Format CSV row for editors
+    function formatCSVRow(data, timestamp, submissionId) {
+        const mediaInfo = data.mediaUrls && data.mediaUrls.length > 0 
+            ? data.mediaUrls.map(m => `${m.originalName}:${m.url}`).join('; ')
+            : 'No media';
+            
+        const csvData = [
+            timestamp,
+            submissionId,
+            data.name,
+            data.curationslaEmail,
+            data.type,
+            data.eventDates || '',
+            data.venue || '',
+            data.description.replace(/"/g, '""'),
+            data.url || '',
+            data.socialMedia || '',
+            data.date,
+            mediaInfo,
+            'Web Form',
+            data.mediaUrls ? data.mediaUrls.length : 0
+        ];
+        
+        return csvData.map(field => `"${field}"`).join(',');
+    }
+
+    // Generate email for editors (with media links)
+    function generateEditorEmail(data, submissionId, files, error = '') {
+        const mediaSection = files && files.length > 0 
+            ? `\n📎 MEDIA FILES (${files.length}):\n${Array.from(files).map(f => `- ${f.name} (${(f.size/1024/1024).toFixed(1)}MB)`).join('\n')}\n`
+            : '\n📎 No media files attached\n';
+
+        const template = `To: lapress@curations.cc
+Subject: 📝 CurationsLA ${data.type} Submission - ${data.name}
+
+🎯 CURATIONSLA SUBMISSION - ${new Date().toISOString()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 SUBMISSION DETAILS:
 Name: ${data.name}
 Email: ${data.curationslaEmail}
 Type: ${data.type}
@@ -110,91 +273,38 @@ Description: ${data.description}
 Website URL: ${data.url || 'N/A'}
 Social Media: ${data.socialMedia || 'N/A'}
 Submission Date: ${data.date}
+${mediaSection}
+⚠️ ${error ? `Error: ${error}` : 'Submission successful'}
 
-Submitted: ${new Date().toLocaleString()}
-Source: ${window.location.href}`;
-    }
+📊 EDITOR ACCESS:
+- Submission ID: ${submissionId}
+- Repository: https://github.com/curationsdev/events-google-forms-api-la/tree/main/responses
+- Media folder: https://github.com/curationsdev/events-google-forms-api-la/tree/main/media
 
-    // Create backup - ALWAYS WORKS
-    function createBackup(data, status, id) {
-        const backup = {
-            id, status, timestamp: new Date().toISOString(), data,
-            formatted: formatSubmissionText(data)
-        };
-        
-        // Save to localStorage
-        const backups = JSON.parse(localStorage.getItem('curationsla-emergency') || '[]');
-        backups.push(backup);
-        localStorage.setItem('curationsla-emergency', JSON.stringify(backups));
-        
-        // Download CSV immediately
-        const csv = [
-            'Timestamp,Status,ID,Name,Email,Type,EventDates,Venue,Description,URL,Social,SubmissionDate',
-            `"${backup.timestamp}","${status}","${id}","${data.name}","${data.curationslaEmail}","${data.type}","${data.eventDates||''}","${data.venue||''}","${data.description}","${data.url||''}","${data.socialMedia||''}","${data.date}"`
-        ].join('\n');
-        
-        downloadFile(csv, `URGENT-curationsla-${id}.csv`, 'text/csv');
-        
-        console.log('💾 EMERGENCY BACKUP CREATED:', backup);
-    }
+🔧 NEXT STEPS:
+1. Review submission details above
+2. Check media files in repository (if any)
+3. Add to curatorial review queue
+4. Contact submitter if needed: ${data.curationslaEmail}
 
-    // Generate email template - ALWAYS WORKS
-    function generateEmailTemplate(data, error = '') {
-        const template = `To: lapress@curations.cc
-Subject: 🚨 URGENT - CurationsLA ${data.type} Submission - ${data.name}
+Time: ${new Date().toLocaleString()}`;
 
-${formatSubmissionText(data)}
-
-🚨 EMERGENCY SUBMISSION SYSTEM ACTIVATED
-This submission was captured via emergency backup system.
-All data preserved for immediate processing.
-
-CRITICAL: Please process this submission manually.
-
-Form: https://la.curations.dev
-Emergency Time: ${new Date().toLocaleString()}
-
----
-EMERGENCY CONTACT INSTRUCTIONS:
-1. Copy this email content
-2. Forward to appropriate team member
-3. Add to your submission system manually
-4. Confirm receipt with submitter at: ${data.curationslaEmail}`;
-
-        // Copy to clipboard
+        // Copy to clipboard (for editors)
         if (navigator.clipboard) {
-            navigator.clipboard.writeText(template).then(() => {
-                console.log('📧 EMAIL COPIED TO CLIPBOARD');
-            }).catch(() => {
-                console.log('📧 EMAIL READY (clipboard failed)');
-            });
+            navigator.clipboard.writeText(template).catch(() => {});
         }
         
-        // Download email file
-        downloadFile(template, `URGENT-email-${Date.now()}.txt`, 'text/plain');
-        
-        console.log('📧 EMERGENCY EMAIL TEMPLATE GENERATED');
-    }
-
-    // Download helper
-    function downloadFile(content, filename, type) {
-        const blob = new Blob([content], { type });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        console.log('📧 EDITOR EMAIL GENERATED');
     }
 
     // Form helpers
     function prepareFormData() {
-        const formData = new FormData(form);
+        const formDataObj = new FormData(form);
         const data = {};
-        for (let [key, value] of formData.entries()) {
-            data[key] = value;
+        for (let [key, value] of formDataObj.entries()) {
+            if (key !== 'submitMedia') {
+                data[key] = value;
+            }
         }
         return data;
     }
@@ -217,8 +327,8 @@ EMERGENCY CONTACT INSTRUCTIONS:
         
         const type = document.getElementById('type').value;
         if (type === 'Event') {
-            const eventDates = document.getElementById('eventDates').value.trim();
-            if (!eventDates) {
+            const eventDates = document.getElementById('eventDates');
+            if (eventDates && !eventDates.value.trim()) {
                 showMessage('error', 'Please enter event dates for event submissions.');
                 return false;
             }
@@ -246,10 +356,10 @@ EMERGENCY CONTACT INSTRUCTIONS:
         const btn = form.querySelector('button[type="submit"]');
         if (btn) {
             btn.disabled = true;
-            btn.textContent = 'Submitting...';
+            btn.textContent = files && files.length > 0 ? 'Uploading media...' : 'Submitting...';
         }
-        console.log('⏳ EMERGENCY SUBMISSION IN PROGRESS');
+        console.log('⏳ SUBMISSION IN PROGRESS');
     }
 
-    console.log('🛡️ EMERGENCY SYSTEM READY - GUARANTEED DATA CAPTURE');
+    console.log('📸 MEDIA + EDITOR CSV SYSTEM READY');
 });

@@ -1,0 +1,40 @@
+name: Update Response CSV Files
+
+on:
+  schedule:
+    # Run every hour to commit any pending responses
+    - cron: '0 * * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [new-response]
+
+jobs:
+  update-responses:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action - Response Updater"
+          
+      - name: Check for pending responses
+        run: |
+          echo "Checking for any pending response data..."
+          # This will be triggered by form submissions via GitHub API
+          
+      - name: Commit updated responses
+        run: |
+          if [ -n "$(git status --porcelain responses/)" ]; then
+            git add responses/
+            git commit -m "📝 Auto-update: New form responses $(date +'%Y-%m-%d %H:%M UTC')" || exit 0
+            git push
+            echo "✅ Responses updated and committed"
+          else
+            echo "No new responses to commit"
+          fi

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CurationsLA - Event, Content + PR Submission</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="form-header">
+            <h1>CURATIONSLA</h1>
+            <h2>Curator Content Form</h2>
+            <p class="subtitle">Submit your content, events, or inquiries for CurationsLA</p>
+        </header>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Submitting...</p>
+        </div>
+
+        <div id="errorMessage" class="message error hidden"></div>
+        <div id="successMessage" class="message success hidden"></div>
+
+        <form id="submissionForm" class="form-content">
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter your name">
+                <small>First name is ok!</small>
+            </div>
+
+            <!-- CurationsLA Email Field -->
+            <div class="form-group">
+                <label for="curationslaEmail" class="required">Email Used to Subscribe</label>
+                <textarea id="curationslaEmail" name="curationslaEmail" rows="3" required 
+                          placeholder="Enter your email address"></textarea>
+                <small>The email that you use to subscribe to CurationsLA. <a href="https://la.curations.cc/#/portal/signup" target="_blank">Subscribe to CurationsLA, free.</a></small>
+            </div>
+
+            <!-- Submission Type Field -->
+            <div class="form-group">
+                <label for="type" class="required">Submission Type</label>
+                <select id="type" name="type" required>
+                    <option value="">Select type...</option>
+                    <option value="Content">Content</option>
+                    <option value="Event">Event</option>
+                    <option value="Other">Other</option>
+                </select>
+                <small>Other indicates anything, including partnerships, further information about CurationsLA, and questions for the Team at CurationsLA or CURATIONS Agency.</small>
+            </div>
+
+            <!-- Submit Media Field -->
+            <div class="form-group">
+                <label for="submitMedia">Submit Media</label>
+                <input type="file" id="submitMedia" name="submitMedia" 
+                       accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.mov,.mp4,.avi" multiple>
+                <small>You can submit any press releases, images, videos, or other media that you might have.</small>
+                <div class="file-upload-note">
+                    <strong>Note:</strong> This form is configured using Google Forms as a backend, and thus, Google requires sign-in for those uploading media. This form can accept up to 1 GB of files.
+                </div>
+            </div>
+
+            <!-- Event Dates Field (conditional) -->
+            <div class="form-group conditional" id="eventDatesGroup" style="display: none;">
+                <label for="eventDates" class="required">Event Date(s)</label>
+                <input type="text" id="eventDates" name="eventDates" 
+                       placeholder="Enter event dates (e.g., Dec 15-17, 2024)">
+                <small>No date field, simple text input for any day(s) of your event. Required for event submissions.</small>
+            </div>
+
+            <!-- Venue Name Field (conditional) -->
+            <div class="form-group conditional" id="venueGroup" style="display: none;">
+                <label for="venue">Venue Name</label>
+                <input type="text" id="venue" name="venue" 
+                       placeholder="Enter venue name or location">
+                <small>The name or neighborhood/general location of your event</small>
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label for="description" class="required">Description</label>
+                <textarea id="description" name="description" rows="6" required
+                          placeholder="Enter detailed description"></textarea>
+                <small>Further information about the content, event, PR, etc., that you are submitting or asking/inquiring about if 'Other' was selected.</small>
+            </div>
+
+            <!-- Website URL Field -->
+            <div class="form-group">
+                <label for="url">Website URL</label>
+                <input type="url" id="url" name="url" 
+                       placeholder="https://example.com">
+                <small>More often than not, is a link to your event, restaurant, any news releases and so-forth. This is not social media links, social media is below. This is not required.</small>
+            </div>
+
+            <!-- Social Media Field -->
+            <div class="form-group">
+                <label for="socialMedia">Social Media Link</label>
+                <input type="url" id="socialMedia" name="socialMedia" 
+                       placeholder="Instagram, X/Twitter, YouTube link">
+                <small>Feel free to submit any social media links that you have regarding this content (Instagram, X/Twitter, YouTube). <strong>*We do not accept TikTok links.</strong></small>
+            </div>
+
+            <!-- Submission Date Field -->
+            <div class="form-group">
+                <label for="date">Submission Date</label>
+                <input type="date" id="date" name="date">
+                <small>Have a date when your content wants to be featured within our 'Curator's Corner,' on our newsletter/website? Doesn't have to be concrete, and can change as needed. Submitting question/inquiry? Indicate ideal date for response (realistic, this is currently a hobby-project).</small>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Submit</button>
+                <button type="reset" class="btn-secondary">Clear Form</button>
+            </div>
+        </form>
+
+        <!-- Backlinks Section -->
+        <footer class="backlinks">
+            <div class="backlinks-content">
+                <p class="backlinks-title">Explore More:</p>
+                <div class="backlinks-list">
+                    <a href="https://curations.org" target="_blank" rel="noopener noreferrer" 
+                       class="backlink-item">
+                        <strong>CURATIONS</strong>
+                    </a>
+                    <a href="https://curations.dev" target="_blank" rel="noopener noreferrer" 
+                       class="backlink-item">
+                        <strong>CURATIONS.DEV</strong>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="/form-config.js"></script>
+    <script src="/js/form.js"></script>
+</body>
+</html>
