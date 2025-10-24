@@ -109,7 +109,17 @@ function main() {
 
   const headerValue = payload.headers || payload.header;
   if (headerValue) {
-    if (!fs.existsSync(masterPath) || fs.statSync(masterPath).size === 0) {
+    let fileIsMissingOrEmpty = false;
+    try {
+      fileIsMissingOrEmpty = fs.statSync(masterPath).size === 0;
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        fileIsMissingOrEmpty = true;
+      } else {
+        throw err;
+      }
+    }
+    if (fileIsMissingOrEmpty) {
       appendRow(masterPath, headerValue);
       changes += 1;
     }
