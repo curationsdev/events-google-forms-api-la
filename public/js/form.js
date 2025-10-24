@@ -207,10 +207,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Convert FormData to object
         for (let [key, value] of formData.entries()) {
-            // Skip file inputs for basic Google Forms integration
-            if (key !== 'media') {
-                data[key] = value;
+            // Handle file inputs differently for Google Forms
+            if (key === 'uploadMedia') {
+                // Note: Google Forms file uploads require special handling
+                // Files will need to be uploaded separately or handled via Google Drive integration
+                console.log('File upload detected:', value.name);
+                // For now, we'll note the file but not include in submission
+                // In production, implement Google Drive API integration
+                continue;
             }
+            data[key] = value;
         }
         
         return data;

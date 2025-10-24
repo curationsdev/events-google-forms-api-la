@@ -58,19 +58,29 @@ Add these fields in this **exact order** for proper mapping:
 - **Required**: Yes
 - **Description**: "Detailed description of your event or content"
 
-#### Field 7: URL
+#### Field 7: Upload Media
+- **Type**: File upload
+- **Question**: "Upload Media"
+- **Required**: No
+- **Description**: "Upload images or documents (JPG, PNG, GIF, PDF, DOC)"
+- **Settings**: 
+  - Allow multiple files: Yes
+  - File types: Images, Documents
+  - Maximum file size: 10MB (Google Forms default)
+
+#### Field 8: URL
 - **Type**: Short answer
 - **Question**: "Website or Content URL"
 - **Required**: No
 - **Description**: "Link to your event, content, or website"
 
-#### Field 8: Social Media
+#### Field 9: Social Media
 - **Type**: Short answer
 - **Question**: "Social Media Link"  
 - **Required**: No
 - **Description**: "Instagram, Twitter, TikTok, or other social media link"
 
-#### Field 9: Submission Date
+#### Field 10: Submission Date
 - **Type**: Date
 - **Question**: "Submission Date"
 - **Required**: Yes
@@ -135,9 +145,10 @@ const fieldMappings = {
     eventDate: 'entry.839337160',
     venue: 'entry.871781623',
     description: 'entry.1302056879',
-    url: 'entry.1696159737',
-    socialMedia: 'entry.1871112715',
-    date: 'entry.1234567890'
+    uploadMedia: 'entry.1696159737', // File upload field
+    url: 'entry.1871112715',
+    socialMedia: 'entry.1234567890',
+    date: 'entry.9876543210'
 };
 ```
 
@@ -167,10 +178,24 @@ Form Description: Submit your events, content, or PR for consideration by Curati
 4. Event Date (Date, Optional)
 5. Venue Name (Short answer, Optional)
 6. Description (Paragraph, Required)
-7. Website or Content URL (Short answer, Optional)
-8. Social Media Link (Short answer, Optional)
-9. Submission Date (Date, Required)
+7. Upload Media (File upload, Optional - Images & Documents)
+8. Website or Content URL (Short answer, Optional)
+9. Social Media Link (Short answer, Optional)
+10. Submission Date (Date, Required)
 ```
+
+## Google Forms File Upload Configuration
+
+When adding the file upload field in Google Forms:
+
+1. **Add Question Type**: Select "File upload"
+2. **Question**: "Upload Media"
+3. **File Upload Settings**:
+   - ✅ Allow respondents to upload files
+   - **File types**: Select "Images" and "Documents"
+   - **Maximum number of files**: 5-10 (your preference)
+   - **Maximum file size**: 10MB (Google Forms default)
+4. **Required**: No (optional field)
 
 ## Need Help?
 

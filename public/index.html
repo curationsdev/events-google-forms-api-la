@@ -77,12 +77,15 @@
                 <small>Long form description of your event or content</small>
             </div>
 
-            <!-- Media Upload Field -->
+            <!-- Upload Media Field -->
             <div class="form-group">
-                <label for="media">Media</label>
-                <input type="file" id="media" name="media" 
-                       accept="image/*,video/*" multiple>
-                <small>Upload media files (images or videos)</small>
+                <label for="uploadMedia">Upload Media</label>
+                <input type="file" id="uploadMedia" name="uploadMedia" 
+                       accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx" multiple>
+                <small>Upload images (JPG, PNG, GIF) or documents (PDF, DOC). Multiple files allowed.</small>
+                <div class="file-upload-note">
+                    <strong>Note:</strong> Files will be processed through Google Forms. Maximum 10MB per file.
+                </div>
             </div>
 
             <!-- URL Field -->
