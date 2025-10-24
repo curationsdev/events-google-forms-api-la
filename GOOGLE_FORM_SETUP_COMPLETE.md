@@ -1,17 +1,41 @@
 # CurationsLA Google Form Setup - Complete Guide
 
-## Google Form Configuration
+## ✅ Current Configuration
 
-You shared this Google Sheets URL, but we need a Google Form. Here's how to create it:
+**Google Form ID**: `1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw`  
+**Form URL**: https://docs.google.com/forms/d/1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw/preview
 
-**Shared URL**: https://docs.google.com/spreadsheets/d/1tPIMsOFDzBsqhjVO9y5o2UvDBZ18m2Rufi57QUjjk2g/edit?usp=sharing
+## 🎯 Next Steps Required
 
-### Step 1: Create the Google Form
+### Step 1: Get Entry IDs from Your Google Form
 
-1. **Go to Google Forms**: https://forms.google.com
-2. **Create New Form**: Click "Blank" or use template
-3. **Title**: "CurationsLA Event & Content Submission"
-4. **Description**: "Submit your events, content, or PR for consideration by CurationsLA"
+Since you have the form ready, you need to extract the entry IDs:
+
+1. **Open your Google Form in edit mode**
+2. **Click "Preview" (eye icon)**
+3. **Right-click → "View Page Source"** 
+4. **Search for "entry." in the source code**
+5. **Find the entry IDs for each field**
+
+### Step 2: Update Field Mappings
+
+Once you have the entry IDs, update the `fieldMappings` object in `/public/js/form.js`:
+
+```javascript
+// Update these with your actual entry IDs from the Google Form source
+const fieldMappings = {
+    name: 'entry.XXXXXXXXX',           // Field 1: Name
+    curationslaEmail: 'entry.XXXXXXXXX', // Field 2: Email Used to Subscribe
+    type: 'entry.XXXXXXXXX',           // Field 3: Submission Type
+    submitMedia: 'entry.XXXXXXXXX',    // Field 4: Submit Media (file upload)
+    eventDates: 'entry.XXXXXXXXX',     // Field 5: Event Date(s)
+    venue: 'entry.XXXXXXXXX',          // Field 6: Venue Name
+    description: 'entry.XXXXXXXXX',    // Field 7: Description
+    url: 'entry.XXXXXXXXX',            // Field 8: Website URL
+    socialMedia: 'entry.XXXXXXXXX',    // Field 9: Social Media Link
+    date: 'entry.XXXXXXXXX'            // Field 10: Submission Date
+};
+```
 
 ### Step 2: Add Form Fields (Exact Order)
 

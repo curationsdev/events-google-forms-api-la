@@ -239,11 +239,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Submit to Google Forms
     async function submitToGoogleForms(data) {
-        const formId = config.GOOGLE_FORM_ID || '{{GOOGLE_FORM_ID}}';
+        const formId = '1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw';
         
-        if (!formId || formId.includes('{{')) {
+        if (!formId) {
             console.error('Google Form ID not configured');
-            // Fallback: try to submit to a generic endpoint or show alternative
             return await submitToAlternativeEndpoint(data);
         }
 
