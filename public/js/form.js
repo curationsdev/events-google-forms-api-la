@@ -136,17 +136,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // Validate URLs if provided
-        const url = document.getElementById('url').value.trim();
-        const socialMedia = document.getElementById('socialMedia').value.trim();
-        
-        if (url && !isValidUrl(url)) {
+        // Validate URLs if provided (allow any format)
+        if (url && url.trim() !== '' && !isValidUrlFlexible(url)) {
             showMessage('error', 'Please enter a valid URL.');
             return false;
         }
         
-        // Validate social media URLs - reject TikTok
-        if (socialMedia && !isValidUrl(socialMedia)) {
+        // Validate social media URLs - reject TikTok (allow any format)
+        if (socialMedia && socialMedia.trim() !== '' && !isValidUrlFlexible(socialMedia)) {
             showMessage('error', 'Please enter a valid social media URL.');
             return false;
         }
@@ -156,10 +153,29 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
+        // Get URL values for validation
+        const url = document.getElementById('url').value.trim();
+        const socialMedia = document.getElementById('socialMedia').value.trim();
+        
         return true;
     }
 
-    // URL validation helper
+    // Flexible URL validation helper (allows URLs without protocol)
+    function isValidUrlFlexible(string) {
+        // Allow URLs with or without protocol
+        if (!string.includes('.')) return false; // Must have at least one dot
+        
+        try {
+            // Try with https:// prefix if no protocol provided
+            const testUrl = string.match(/^https?:\/\//) ? string : `https://${string}`;
+            new URL(testUrl);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
+    // URL validation helper (strict)
     function isValidUrl(string) {
         try {
             new URL(string);
