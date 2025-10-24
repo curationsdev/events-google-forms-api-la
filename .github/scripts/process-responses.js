@@ -60,8 +60,19 @@ function extractContent(entry) {
   return null;
 }
 
+// RFC 4180-compliant CSV escaping
+function csvEscape(value) {
+  if (value == null) return '';
+  const str = String(value);
+  if (/[",\n\r]/.test(str)) {
+    // Escape double quotes by doubling them
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
 function appendRow(filePath, row) {
-  const finalRow = Array.isArray(row) ? row.join(',') : row;
+  const finalRow = Array.isArray(row) ? row.map(csvEscape).join(',') : row;
   const normalizedRow = finalRow.endsWith('\n') ? finalRow : `${finalRow}\n`;
   ensureDirectoryForFile(filePath);
   fs.appendFileSync(filePath, normalizedRow, 'utf8');
