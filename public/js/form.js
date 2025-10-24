@@ -58,19 +58,23 @@ document.addEventListener('DOMContentLoaded', function() {
             
             hideLoading();
             
-            if (success) {
-                showMessage('success', 'Form submitted successfully! Thank you for your submission to CurationsLA.');
-                form.reset();
-                dateInput.value = today;
-                typeSelect.dispatchEvent(new Event('change')); // Reset conditional fields
+            if (result.success) {
+                console.log('📊 Submission result:', result);
                 
-                // Scroll to success message
-                document.getElementById('successMessage').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
-                });
+                // Store submission details for success page
+                sessionStorage.setItem('curationsla-submission', JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    method: result.method,
+                    submissionId: result.submissionId || 'local-backup',
+                    formId: result.formId || 'backup',
+                    viewUrl: result.viewUrl || ''
+                }));
+                
+                // Redirect to success page
+                window.location.href = './success.html';
+                
             } else {
-                showMessage('error', 'Failed to submit form. Please try again or contact us directly.');
+                throw new Error('Submission failed');
             }
         } catch (error) {
             hideLoading();
