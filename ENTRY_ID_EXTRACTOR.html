@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Form Entry ID Extractor</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .step { margin: 20px 0; padding: 15px; border-left: 4px solid #8B5CF6; background: #f8fafc; }
+        .code { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        .entry-id { color: #10b981; font-weight: bold; }
+        button { background: #8B5CF6; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; margin: 10px 5px; }
+        button:hover { background: #7c3aed; }
+        #results { margin-top: 20px; }
+        .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Google Form Entry ID Extractor</h1>
+        
+        <div class="step">
+            <h3>Step 1: Get Your Form's Entry IDs</h3>
+            <p>Your Google Form: <strong>1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw</strong></p>
+            <button onclick="openFormSource()">Open Form Source in New Tab</button>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Find Entry IDs</h3>
+            <p>In the opened page:</p>
+            <ol>
+                <li>Press <kbd>Ctrl+F</kbd> (or <kbd>Cmd+F</kbd> on Mac)</li>
+                <li>Search for: <code>entry.</code></li>
+                <li>Look for lines like: <code class="entry-id">entry.1234567890</code></li>
+                <li>Copy each entry ID and paste below</li>
+            </ol>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Enter Your Entry IDs</h3>
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px; align-items: center;">
+                <label>Name:</label>
+                <input type="text" id="name" placeholder="entry.1234567890" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Email Used to Subscribe:</label>
+                <input type="text" id="email" placeholder="entry.1234567891" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Submission Type:</label>
+                <input type="text" id="type" placeholder="entry.1234567892" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Submit Media:</label>
+                <input type="text" id="media" placeholder="entry.1234567893" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Event Date(s):</label>
+                <input type="text" id="eventDates" placeholder="entry.1234567894" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Venue Name:</label>
+                <input type="text" id="venue" placeholder="entry.1234567895" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Description:</label>
+                <input type="text" id="description" placeholder="entry.1234567896" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Website URL:</label>
+                <input type="text" id="url" placeholder="entry.1234567897" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Social Media Link:</label>
+                <input type="text" id="social" placeholder="entry.1234567898" style="padding: 8px; border: 1px solid #ccc;">
+                
+                <label>Submission Date:</label>
+                <input type="text" id="date" placeholder="entry.1234567899" style="padding: 8px; border: 1px solid #ccc;">
+            </div>
+            
+            <button onclick="generateCode()">Generate JavaScript Code</button>
+            <button onclick="testSubmission()">Test Direct Submission</button>
+        </div>
+
+        <div id="results"></div>
+
+        <div class="warning">
+            <strong>⚠️ Important:</strong> Make sure your Google Form has exactly 10 fields in the order listed above, or the mapping won't work correctly.
+        </div>
+    </div>
+
+    <script>
+        function openFormSource() {
+            window.open('https://docs.google.com/forms/d/1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw/viewform', '_blank');
+        }
+
+        function generateCode() {
+            const fields = ['name', 'email', 'type', 'media', 'eventDates', 'venue', 'description', 'url', 'social', 'date'];
+            const fieldNames = ['name', 'curationslaEmail', 'type', 'submitMedia', 'eventDates', 'venue', 'description', 'url', 'socialMedia', 'date'];
+            
+            let code = 'const fieldMappings = {\n';
+            
+            fields.forEach((field, index) => {
+                const entryId = document.getElementById(field).value.trim();
+                if (entryId) {
+                    code += `    ${fieldNames[index]}: '${entryId}',\n`;
+                }
+            });
+            
+            code += '};';
+
+            document.getElementById('results').innerHTML = `
+                <h3>✅ Generated JavaScript Code</h3>
+                <p>Replace the fieldMappings object in your form.js file with this:</p>
+                <div class="code">${code}</div>
+                <button onclick="copyToClipboard('${code.replace(/'/g, "\\'")}')">Copy Code</button>
+            `;
+        }
+
+        function testSubmission() {
+            const formId = '1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw';
+            const testUrl = `https://docs.google.com/forms/d/${formId}/formResponse`;
+            
+            // Create test data
+            const formData = new FormData();
+            
+            const fields = ['name', 'email', 'type', 'media', 'eventDates', 'venue', 'description', 'url', 'social', 'date'];
+            const testValues = ['Test Name', 'test@example.com', 'Content', '', 'N/A', 'N/A', 'Test Description', 'https://example.com', 'https://instagram.com/test', new Date().toISOString().split('T')[0]];
+            
+            fields.forEach((field, index) => {
+                const entryId = document.getElementById(field).value.trim();
+                if (entryId && testValues[index]) {
+                    formData.append(entryId, testValues[index]);
+                }
+            });
+
+            fetch(testUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            }).then(() => {
+                document.getElementById('results').innerHTML = `
+                    <h3>🧪 Test Submission Sent</h3>
+                    <p>A test submission has been sent to your Google Form. Check your form responses to see if it worked!</p>
+                    <p><a href="https://docs.google.com/forms/d/${formId}/edit#responses" target="_blank">Check Form Responses →</a></p>
+                `;
+            }).catch(error => {
+                document.getElementById('results').innerHTML = `
+                    <h3>❌ Test Failed</h3>
+                    <p>Error: ${error.message}</p>
+                `;
+            });
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Code copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
