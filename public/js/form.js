@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = prepareGoogleFormData();
             
             // Submit to Google Forms
-            const success = await submitToGoogleForms(formData);
+            const success = await submitToTally(formData);
             
             hideLoading();
             
