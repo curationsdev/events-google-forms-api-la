@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const formIds = [
             window.GOOGLE_FORM_ID || '', // From environment
             '{{GOOGLE_FORM_ID}}', // Build-time replacement
-            '1fVCzIK1NYcajiDCZxiLlFI7hf89-K5WEk4gN1Alvblw', // Original
+            '1FAIpQLSegF0_vTYgF3ms1rhyYmCwBX3oScuReLDojU5XK1w9KY2SgyA', // Original
             // Add more public form IDs here if available
         ].filter(id => id && id !== '{{GOOGLE_FORM_ID}}');
         
