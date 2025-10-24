@@ -19,9 +19,9 @@ function isBase64String(str) {
   if (!normalized) return false;
   if (/[^A-Za-z0-9+/=\r\n]/.test(normalized)) return false;
   try {
-    const decoded = Buffer.from(normalized, 'base64').toString('utf8');
-    const reencoded = Buffer.from(decoded, 'utf8').toString('base64').replace(/=+$/, '');
-    return reencoded === normalized.replace(/=+$/, '');
+    const decodedBuffer = Buffer.from(normalized, 'base64');
+    const reencoded = decodedBuffer.toString('base64');
+    return reencoded.replace(/=+$/, '') === normalized.replace(/=+$/, '');
   } catch (error) {
     return false;
   }
