@@ -13,25 +13,31 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Configure Git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action - Response Updater"
-          
+
+      - name: Process repository dispatch payload
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "Processing repository_dispatch payload for response updates..."
+          node .github/scripts/process-responses.js
+
       - name: Check for pending responses
         run: |
           echo "Checking for any pending response data..."
           # This will be triggered by form submissions via GitHub API
-          
+
       - name: Commit updated responses
         run: |
-          if [ -n "$(git status --porcelain responses/)" ]; then
-            git add responses/
+          if [ -n "$(git status --porcelain)" ]; then
+            git add responses/ .github/scripts/
             git commit -m "📝 Auto-update: New form responses $(date +'%Y-%m-%d %H:%M UTC')" || exit 0
             git push
             echo "✅ Responses updated and committed"
