@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (!type) {
-            showMessage('error', 'Please select a type (Content or Event).');
+            showMessage('error', 'Please select a type (Content, Event, or Other).');
             return false;
         }
         

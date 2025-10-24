@@ -36,8 +36,9 @@ Add these fields in this **exact order** for proper mapping:
 - **Options**: 
   - Content
   - Event
+  - Other
 - **Required**: Yes
-- **Description**: "Select whether this is content or an event"
+- **Description**: "Select whether this is content, an event, or other submission"
 
 #### Field 4: Event Date
 - **Type**: Date
@@ -162,7 +163,7 @@ Form Description: Submit your events, content, or PR for consideration by Curati
 
 1. Full Name (Short answer, Required)
 2. CurationsLA Email (Short answer, Required, Email validation)
-3. Submission Type (Multiple choice: Content/Event, Required) 
+3. Submission Type (Multiple choice: Content/Event/Other, Required) 
 4. Event Date (Date, Optional)
 5. Venue Name (Short answer, Optional)
 6. Description (Paragraph, Required)
