@@ -23,7 +23,14 @@ Add these fields in this **exact order** for proper mapping:
 - **Required**: Yes
 - **Description**: "Enter your full name"
 
-#### Field 2: Type  
+#### Field 2: CurationsLA Email
+- **Type**: Short answer
+- **Question**: "CurationsLA Email"
+- **Required**: Yes
+- **Description**: "Your email address for CurationsLA communications"
+- **Validation**: Email format
+
+#### Field 3: Type  
 - **Type**: Multiple choice
 - **Question**: "Submission Type"
 - **Options**: 
@@ -32,37 +39,37 @@ Add these fields in this **exact order** for proper mapping:
 - **Required**: Yes
 - **Description**: "Select whether this is content or an event"
 
-#### Field 3: Event Date
+#### Field 4: Event Date
 - **Type**: Date
 - **Question**: "Event Date"
 - **Required**: No
 - **Description**: "Date of the event (Events only)"
 
-#### Field 4: Venue
+#### Field 5: Venue
 - **Type**: Short answer  
 - **Question**: "Venue Name"
 - **Required**: No
 - **Description**: "Event venue (Events only)"
 
-#### Field 5: Description
+#### Field 6: Description
 - **Type**: Paragraph
 - **Question**: "Description"
 - **Required**: Yes
 - **Description**: "Detailed description of your event or content"
 
-#### Field 6: URL
+#### Field 7: URL
 - **Type**: Short answer
 - **Question**: "Website or Content URL"
 - **Required**: No
 - **Description**: "Link to your event, content, or website"
 
-#### Field 7: Social Media
+#### Field 8: Social Media
 - **Type**: Short answer
 - **Question**: "Social Media Link"  
 - **Required**: No
 - **Description**: "Instagram, Twitter, TikTok, or other social media link"
 
-#### Field 8: Submission Date
+#### Field 9: Submission Date
 - **Type**: Date
 - **Question**: "Submission Date"
 - **Required**: Yes
@@ -122,13 +129,14 @@ Here's how the entry IDs typically look:
 // Example - Replace with your actual entry IDs
 const fieldMappings = {
     name: 'entry.2005620554',
+    curationslaEmail: 'entry.1166974658',
     type: 'entry.1045781291', 
-    eventDate: 'entry.1166974658',
-    venue: 'entry.839337160',
-    description: 'entry.871781623',
-    url: 'entry.1302056879',
-    socialMedia: 'entry.1696159737',
-    date: 'entry.1871112715'
+    eventDate: 'entry.839337160',
+    venue: 'entry.871781623',
+    description: 'entry.1302056879',
+    url: 'entry.1696159737',
+    socialMedia: 'entry.1871112715',
+    date: 'entry.1234567890'
 };
 ```
 
@@ -153,13 +161,14 @@ Form Title: CurationsLA Event & Content Submission
 Form Description: Submit your events, content, or PR for consideration by CurationsLA
 
 1. Full Name (Short answer, Required)
-2. Submission Type (Multiple choice: Content/Event, Required) 
-3. Event Date (Date, Optional)
-4. Venue Name (Short answer, Optional)
-5. Description (Paragraph, Required)
-6. Website or Content URL (Short answer, Optional)
-7. Social Media Link (Short answer, Optional)
-8. Submission Date (Date, Required)
+2. CurationsLA Email (Short answer, Required, Email validation)
+3. Submission Type (Multiple choice: Content/Event, Required) 
+4. Event Date (Date, Optional)
+5. Venue Name (Short answer, Optional)
+6. Description (Paragraph, Required)
+7. Website or Content URL (Short answer, Optional)
+8. Social Media Link (Short answer, Optional)
+9. Submission Date (Date, Required)
 ```
 
 ## Need Help?

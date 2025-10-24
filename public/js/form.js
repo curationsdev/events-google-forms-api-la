@@ -93,12 +93,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Validation function
     function validateForm() {
         const name = document.getElementById('name').value.trim();
+        const curationslaEmail = document.getElementById('curationslaEmail').value.trim();
         const type = document.getElementById('type').value;
         const description = document.getElementById('description').value.trim();
         const date = document.getElementById('date').value;
         
         if (!name) {
             showMessage('error', 'Please enter your name.');
+            return false;
+        }
+        
+        if (!curationslaEmail) {
+            showMessage('error', 'Please enter your CurationsLA email.');
+            return false;
+        }
+        
+        if (!isValidEmail(curationslaEmail)) {
+            showMessage('error', 'Please enter a valid email address.');
             return false;
         }
         
@@ -157,6 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (_) {
             return false;
         }
+    }
+
+    // Email validation helper
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
 
     // UI helper functions
@@ -220,13 +237,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Example field mappings (you'll need to update these with your actual entry IDs)
             const fieldMappings = {
                 name: 'entry.1234567890',        // Replace with actual entry ID from Google Form
-                type: 'entry.2345678901',        // Replace with actual entry ID
-                eventDate: 'entry.3456789012',   // Replace with actual entry ID
-                venue: 'entry.4567890123',       // Replace with actual entry ID
-                description: 'entry.5678901234', // Replace with actual entry ID
-                url: 'entry.6789012345',         // Replace with actual entry ID
-                socialMedia: 'entry.7890123456', // Replace with actual entry ID
-                date: 'entry.8901234567'         // Replace with actual entry ID
+                curationslaEmail: 'entry.2345678901', // Replace with actual entry ID
+                type: 'entry.3456789012',        // Replace with actual entry ID
+                eventDate: 'entry.4567890123',   // Replace with actual entry ID
+                venue: 'entry.5678901234',       // Replace with actual entry ID
+                description: 'entry.6789012345', // Replace with actual entry ID
+                url: 'entry.7890123456',         // Replace with actual entry ID
+                socialMedia: 'entry.8901234567', // Replace with actual entry ID
+                date: 'entry.9012345678'         // Replace with actual entry ID
             };
 
             // Map the data to Google Forms format
